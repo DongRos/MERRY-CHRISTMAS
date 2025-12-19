@@ -6,6 +6,7 @@ import UIOverlay from './components/UIOverlay';
 
 export default function App() {
   const [mode, setMode] = useState<'WISH' | 'CHAOS'>('WISH');
+  const [isPaused, setIsPaused] = useState(false); // 新增暂停状态
   const [blurLevel, setBlurLevel] = useState(0);
   const [snowSize, setSnowSize] = useState(0.5);
   const [title, setTitle] = useState('MERRY CHRISTMAS');
@@ -30,6 +31,7 @@ export default function App() {
             mode={mode} 
             blurLevel={blurLevel} 
             snowSize={snowSize} 
+            isPaused={isPaused} // 传递给 Scene
           />
         </Suspense>
       </Canvas>
@@ -44,6 +46,8 @@ export default function App() {
       <UIOverlay 
         currentMode={mode} 
         setMode={setMode} 
+        isPaused={isPaused} // 传递给 UI
+        setIsPaused={setIsPaused} // 传递 Setter
         blurLevel={blurLevel}
         setBlurLevel={setBlurLevel}
         snowSize={snowSize}
