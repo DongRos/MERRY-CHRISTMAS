@@ -1,14 +1,10 @@
 import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, PerspectiveCamera, Stars, Sparkles } from '@react-three/drei';
-import * as THREE from 'this';
-import * as THREE_LIB from 'three';
+import * as THREE from 'three';
 import DiamondParticles from './DiamondParticles';
 import Garland from './Garland';
 import PostEffects from './PostEffects';
-
-// Explicitly use the imported THREE for types and constructors
-const THREE = THREE_LIB;
 
 interface SceneProps {
   mode: 'WISH' | 'CHAOS';
