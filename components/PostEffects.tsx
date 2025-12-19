@@ -13,7 +13,7 @@ export default function PostEffects({ blurLevel }: PostEffectsProps) {
   return (
     <EffectComposer 
       disableNormalPass 
-      multisampling={0} // [修改] 关闭多重采样以修复手机端崩溃问题
+      multisampling={4} // Helps with aliasing-related flickering
     >
       <DepthOfField
         target={[0, 0, 100]} 
