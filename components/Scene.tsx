@@ -96,8 +96,13 @@ function Snow({ size, count = 1500 }: { size: number, count?: number }) {
   useFrame(() => {
     if (!points.current) return;
     const pos = points.current.geometry.attributes.position.array as Float32Array;
+    
+    // 增加速度系数：基础速度 + 密度带来的额外速度 (例如最大加速5倍)
+    const speedMultiplier = 1 + size * 5;
+
     for (let i = 0; i < count; i++) {
-      pos[i * 3 + 1] -= particles.velocities[i];
+      // 这里的下落速度乘以 speedMultiplier
+      pos[i * 3 + 1] -= particles.velocities[i] * speedMultiplier;
       pos[i * 3] += Math.sin(Date.now() * 0.001 + i) * 0.01;
       
       if (pos[i * 3 + 1] < -25) {
@@ -165,7 +170,8 @@ export default function Scene({ mode, blurLevel, snowSize }: SceneProps) {
         color="#ffffff" 
       />
 
-      <Snow size={snowSize} count={2000} />
+      {/* 修改 count：基础 2000 + 根据 snowSize 动态增加到约 17000 */}
+      <Snow size={snowSize} count={Math.floor(2000 + snowSize * 15000)} />
 
       <group ref={groupRef}>
         <DiamondParticles mode={mode} />
