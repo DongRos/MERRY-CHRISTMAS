@@ -14,7 +14,7 @@ export default function App() {
   return (
     <div className="relative w-full h-screen bg-black text-white overflow-hidden">
       <Canvas
-        dpr={[1, 1.5]} // [修改] 降低移动端最大像素比，防止显存溢出
+        dpr={[1, 2]} 
         camera={{ position: [0, 0, 22], fov: 40 }}
         gl={{
           antialias: true,
