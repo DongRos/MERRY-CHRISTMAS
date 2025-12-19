@@ -143,7 +143,7 @@ function Snow({ size, count = 1500, isPaused }: { size: number, count?: number, 
   );
 }
 
-export default function Scene({ mode, blurLevel, snowSize }: SceneProps) {
+export default function Scene({ mode, blurLevel, snowSize, isPaused }: SceneProps) {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame((state, delta) => {
