@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 interface UIOverlayProps {
   currentMode: 'WISH' | 'CHAOS';
   setMode: (mode: 'WISH' | 'CHAOS') => void;
+  isPaused: boolean; // 新增
+  setIsPaused: (val: boolean) => void; // 新增
   blurLevel: number;
   setBlurLevel: (val: number) => void;
   snowSize: number;
@@ -82,10 +84,22 @@ const UIOverlay: React.FC<UIOverlayProps> = ({
             ? 'bg-purple-500/10 border-purple-400/40 shadow-[0_0_50px_rgba(168,85,247,0.2)]' 
             : 'bg-white/5 border-white/20'}
         `}>
+          {/* 新增：左侧静止按钮 (-) */}
+          <button
+            onClick={() => setIsPaused(!isPaused)}
+            className={`w-12 h-12 flex items-center justify-center text-lg transition-all active:scale-90 ${isPaused ? 'text-white font-bold' : 'text-white/30 hover:text-white'}`}
+            aria-label="Toggle Pause"
+          >
+            {isPaused ? '▶' : '-'} 
+          </button>
+
+          {/* 新增：左侧分隔线 */}
+          <div className="w-[1px] h-4 bg-white/10" />
+
           {/* Main Action Area */}
           <button
             onClick={() => setMode(currentMode === 'CHAOS' ? 'WISH' : 'CHAOS')}
-            className="pl-10 pr-6 py-4 font-serif tracking-[0.3em] text-[10px] md:text-xs text-white/80 hover:text-white transition-colors active:scale-95"
+            className="px-6 py-4 font-serif tracking-[0.3em] text-[10px] md:text-xs text-white/80 hover:text-white transition-colors active:scale-95"
           >
             {currentMode === 'CHAOS' ? 'REASSEMBLE' : 'UNLEASH CHAOS'}
           </button>
