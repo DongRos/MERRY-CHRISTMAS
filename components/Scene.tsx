@@ -80,28 +80,34 @@ function StarTopper() {
 
 function Snow({ size, count = 1500 }: { size: number, count?: number }) {
   const points = useRef<THREE.Points>(null);
+  // 1. 定义一个足够大的最大值，防止 buffer 重新分配
+  const maxCount = 20000;
   
   const particles = useMemo(() => {
-    const p = new Float32Array(count * 3);
-    const v = new Float32Array(count); // velocities
-    for (let i = 0; i < count; i++) {
+    // 2. 始终按照最大数量分配内存，只运行一次 (deps 为空数组)
+    const p = new Float32Array(maxCount * 3);
+    const v = new Float32Array(maxCount); 
+    for (let i = 0; i < maxCount; i++) {
       p[i * 3] = (Math.random() - 0.5) * 50;
       p[i * 3 + 1] = Math.random() * 50 - 25;
       p[i * 3 + 2] = (Math.random() - 0.5) * 50;
       v[i] = 0.05 + Math.random() * 0.1;
     }
     return { positions: p, velocities: v };
-  }, [count]);
+  }, []); 
 
   useFrame(() => {
     if (!points.current) return;
-    const pos = points.current.geometry.attributes.position.array as Float32Array;
     
-    // 增加速度系数：基础速度 + 密度带来的额外速度 (例如最大加速5倍)
+    // 3. 使用 setDrawRange 动态控制当前渲染多少个雪花，避免重置 Buffer
+    points.current.geometry.setDrawRange(0, Math.min(count, maxCount));
+
+    const pos = points.current.geometry.attributes.position.array as Float32Array;
     const speedMultiplier = 1 + size * 5;
 
-    for (let i = 0; i < count; i++) {
-      // 这里的下落速度乘以 speedMultiplier
+    // 4. 循环更新所有粒子（maxCount），确保隐藏的粒子位置也在持续更新，
+    // 这样当它们显示出来时位置是自然的，不会突然跳出来。
+    for (let i = 0; i < maxCount; i++) {
       pos[i * 3 + 1] -= particles.velocities[i] * speedMultiplier;
       pos[i * 3] += Math.sin(Date.now() * 0.001 + i) * 0.01;
       
@@ -115,9 +121,10 @@ function Snow({ size, count = 1500 }: { size: number, count?: number }) {
   return (
     <points ref={points}>
       <bufferGeometry>
+        {/* 5. 这里 count 固定为 maxCount，array 长度也不变 */}
         <bufferAttribute 
           attach="attributes-position" 
-          count={count} 
+          count={maxCount} 
           array={particles.positions} 
           itemSize={3} 
         />
