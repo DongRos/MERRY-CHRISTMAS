@@ -8,8 +8,12 @@ interface DiamondParticlesProps {
   isPaused: boolean; // 新增
 }
 
-export default function DiamondParticles({ mode, isPaused }: DiamondParticlesProps) {
+export default function DiamondParticles({ mode }: DiamondParticlesProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
+  
+  // 修复: 定义 isPaused 变量以防止 ReferenceError 报错
+  const isPaused = false; 
+
   const { particleCount, treeHeight, treeRadius } = CONFIG;
 
   const { targetPositions, chaosPositions, randomRotations, scales } = useMemo(() => {
