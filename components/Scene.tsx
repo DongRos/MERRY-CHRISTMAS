@@ -178,7 +178,7 @@ export default function Scene({ mode, blurLevel, snowSize }: SceneProps) {
       />
 
       {/* 修改 count：基础 2000 + 根据 snowSize 动态增加到约 17000 */}
-      <Snow size={snowSize} count={Math.floor(2000 + snowSize * 15000)} />
+      <Snow size={snowSize} count={Math.floor(2000 + snowSize * 10000)} />
 
       <group ref={groupRef}>
         <DiamondParticles mode={mode} />
