@@ -14,6 +14,7 @@ interface SceneProps {
   mode: 'WISH' | 'CHAOS';
   blurLevel: number;
   snowSize: number;
+  isPaused: boolean; // 新增
 }
 
 function StarTopper() {
@@ -78,7 +79,8 @@ function StarTopper() {
   );
 }
 
-function Snow({ size, count = 1500 }: { size: number, count?: number }) {
+// 修改 Snow 组件接收 isPaused
+function Snow({ size, count = 1500, isPaused }: { size: number, count?: number, isPaused: boolean }) {
   const points = useRef<THREE.Points>(null);
   // 1. 定义一个足够大的最大值，防止 buffer 重新分配
   const maxCount = 20000;
@@ -97,6 +99,7 @@ function Snow({ size, count = 1500 }: { size: number, count?: number }) {
   }, []); 
 
   useFrame(() => {
+    if (isPaused) return; // 暂停时停止雪花更新
     if (!points.current) return;
     
     // 3. 使用 setDrawRange 动态控制当前渲染多少个雪花，避免重置 Buffer
@@ -144,6 +147,7 @@ export default function Scene({ mode, blurLevel, snowSize }: SceneProps) {
   const groupRef = useRef<THREE.Group>(null);
 
   useFrame((state, delta) => {
+    if (isPaused) return; // 暂停时停止树的自转
     if (groupRef.current) {
       groupRef.current.rotation.y += delta * 0.08;
     }
@@ -178,10 +182,10 @@ export default function Scene({ mode, blurLevel, snowSize }: SceneProps) {
       />
 
       {/* 修改 count：基础 2000 + 根据 snowSize 动态增加到约 17000 */}
-      <Snow size={snowSize} count={Math.floor(2000 + snowSize * 10000)} />
+      <Snow size={snowSize} count={Math.floor(2000 + snowSize * 10000)} isPaused={isPaused} />
 
       <group ref={groupRef}>
-        <DiamondParticles mode={mode} />
+        <DiamondParticles mode={mode} isPaused={isPaused} />
         <Garland visible={mode === 'WISH'} />
         {mode === 'WISH' && <StarTopper />}
       </group>
