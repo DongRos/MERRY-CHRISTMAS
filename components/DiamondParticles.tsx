@@ -5,9 +5,10 @@ import { CONFIG } from '../constants';
 
 interface DiamondParticlesProps {
   mode: 'WISH' | 'CHAOS';
+  isPaused: boolean; // 新增
 }
 
-export default function DiamondParticles({ mode }: DiamondParticlesProps) {
+export default function DiamondParticles({ mode, isPaused }: DiamondParticlesProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const { particleCount, treeHeight, treeRadius } = CONFIG;
 
@@ -56,6 +57,7 @@ export default function DiamondParticles({ mode }: DiamondParticlesProps) {
   }, [chaosPositions, particleCount]);
 
   useFrame((state) => {
+    if (isPaused) return; // 暂停时直接返回，停止粒子运动
     if (!meshRef.current) return;
 
     const time = state.clock.getElapsedTime();
